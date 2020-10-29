@@ -20,6 +20,9 @@ const server = http.createServer((req, res) => {
     // Si urlParseada tiene query, lo guardo. Si no tiene, lo guardo vacío 
     const { query = {} } = urlParseada;
     
+    // 3.3 Obtener headers
+    const { headers = {} } = req;
+    console.log({ headers })
 
     // 4. Enviar respuesta dependiendo de la ruta
     // "res.end" termina el procesa de respuesta, puede recibir string
