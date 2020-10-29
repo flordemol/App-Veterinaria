@@ -10,13 +10,19 @@ const server = http.createServer((req, res) => {
     // 2. Obtener la ruta
     const ruta = urlParseada.pathname;
     
-    // 3. Enviar respuesta dependiendo de la ruta
+    // Quitar slash
+    const rutaLimpia = ruta.replace(/^\/+|\/+$/g, '')
+
+    // 4. Enviar respuesta dependiendo de la ruta
     // "res.end" termina el procesa de respuesta, puede recibir string
-    if(ruta === "/ruta"){
-        res.end("Hola, estas es /ruta");
-    } else {
-        res.end("Estas en una ruta que no conozco");
-    }
+    switch(rutaLimpia){
+        case 'ruta':
+            res.end("Hola, estas en /ruta");
+            break
+        default:
+            res.end("Estas en una ruta que no conozco");
+            break;
+        }
 });
 
 // Escuchar puerto 5000
