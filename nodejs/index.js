@@ -10,8 +10,11 @@ const server = http.createServer((req, res) => {
     // 2. Obtener la ruta
     const ruta = urlParseada.pathname;
     
-    // Quitar slash
+    // 3. Quitar slash
     const rutaLimpia = ruta.replace(/^\/+|\/+$/g, '')
+
+    // 3.1 Obtener el método HTTP
+    console.log(req.method.toLocaleLowerCase())
 
     // 4. Enviar respuesta dependiendo de la ruta
     // "res.end" termina el procesa de respuesta, puede recibir string
