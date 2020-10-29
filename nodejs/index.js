@@ -14,7 +14,12 @@ const server = http.createServer((req, res) => {
     const rutaLimpia = ruta.replace(/^\/+|\/+$/g, '')
 
     // 3.1 Obtener el método HTTP
-    console.log(req.method.toLocaleLowerCase())
+    const metodo = req.method.toLocaleLowerCase();
+
+    // 3.2 Obtener variables del Query URL
+    // Si urlParseada tiene query, lo guardo. Si no tiene, lo guardo vacío 
+    const { query = {} } = urlParseada;
+    
 
     // 4. Enviar respuesta dependiendo de la ruta
     // "res.end" termina el procesa de respuesta, puede recibir string
