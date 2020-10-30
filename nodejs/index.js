@@ -38,19 +38,47 @@ const server = http.createServer((req, res) => {
     req.on('end', () => {
         buffer += decoder.end();
 
-    // 4. Enviar respuesta dependiendo de la ruta
-    // ESTAS RESPUESTAS DEBEN ENVIARSE LUEGO DE FINALIZADO EL REQUEST (por eso las moví dentro de req.on('end'))
-    // "res.end" termina el procesa de respuesta, puede recibir string
-    switch(rutaLimpia){
-        case 'ruta':
-            res.end("Hola, estas en /ruta");
-            break
-        default:
-            res.end("Estas en una ruta que no conozco");
-            break;
+        // 3.5 Ordenar los datos del request
+        const data = {
+            ruta : rutaLimpia,
+            query,
+            metodo,
+            headers,
+            payload : buffer
+        };
+
+        // 3.6 Elegir el manejador dependiendo de la ruta y asignar la función que el enrutador tiene
+        let handler;
+        if(rutaLimpia && enrutador[rutaLimpia]) {
+            handler = enrutador[rutaLimpia];
+        } else {
+            handler = enrutador.noEncontrado;
         }
+
+        // 4. Ejecutar handler (manejador) para enviar la respuesta
+        if(typeof handler === 'function'){
+            handler(data, (statusCode = 200, mensaje) => {
+                const respuesta = JSON.stringify(mensaje);
+                res.writeHead(statusCode);
+                // Línea donde estamos respondiendo a la aplicación cliente
+                res.end(respuesta);
+            });
+        };
     });
 });
+
+// Crear rutas y manejadores (handler)
+const enrutador = {
+    ruta : (data, callback) => {
+        callback(200, {mensaje: "Esta es /ruta"});
+    },
+    usuarios : (data, callback) => {
+        callback(200, [{nombre: "usuario 1"}, {nombre: "usuario 2"}]);
+    },
+    noEncontrado : (data, callback) => {
+        callback(404, {mensaje: "No encontrado"});
+    }
+}
 
 // Escuchar puerto 5000
 server.listen(5000, () => {
